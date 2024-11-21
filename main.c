@@ -1,71 +1,66 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-void imprime_histograma(int* vendas[],int num_categorias);
-void imprime_linha(int *venda);
+void imprime_histograma(char* categorias[], int quantidades[], int total) {
 
-int main(){
-    int linha, coluna, i, j;
-    scanf("%d",&linha);
-    getchar();
-    scanf("%d",&coluna);
+    for (int i = 0; i < total; i++) {
 
-    getchar();
+        printf("%d ", quantidades[i]);
 
-    if(linha == 0){
-        printf("[matriz vazia]");
-        return 0; 
-    }
+        for (int j = 0; j < quantidades[i]; j++) {
 
-    if(coluna == 0){
-        printf("vazio");
-        return 0; 
-    }
-    int **vetor = (int**)malloc(linha * sizeof(int*));
-
-    for (i = 0; i < linha; i++){
-        vetor[i] = (int*)malloc(coluna * sizeof(int));
-    }
-
-    for (i = 0; i < linha; i++){
-        for(j = 0; j < coluna; j++){
-            scanf("%d",&vetor[i][j]);
-            if(j == coluna-1){
-                printf("%d",vetor[i][j]);
-
-
-            }else{
-                printf("%d ",vetor[i][j]);            
-            }   
+            printf("%c", categorias[i][j]);
         }
+
         printf("\n");
     }
+}
 
-    //imprime_histograma(vetor,qtd);
+void preencher_histograma(char *categorias[], int quantidade, int indice) {
 
-    for (i = 0; i < linha; i++)
-    {
-        free(vetor[i]);
+    for (int i = 0; i < quantidade; i++) {
+        if (categorias[indice][i] >= 0) {
+            categorias[indice][i] = '*';
+        }
+    }
+    if (categorias[indice][quantidade]) {
+        categorias[indice][quantidade] = '\0';
+    }
+}
+
+int main() {
+
+    int total_categorias;
+
+    scanf("%d", &total_categorias);
+
+    if (total_categorias <= 0) {
+        printf("vazio\n");
+        return 0;
     }
 
-    free(vetor);
+    int valores[total_categorias];
+    char* histograma[total_categorias];
 
+    for (int i = 0; i < total_categorias; i++) {
+
+        scanf("%d", &valores[i]);
+
+        if (valores[i] == 0) {
+
+            histograma[i] = NULL;
+
+        } else {
+            histograma[i] = (char*)malloc((valores[i] + 1) * sizeof(char));
+
+            preencher_histograma(histograma, valores[i], i);
+        }
+    }
+
+    imprime_histograma(histograma, valores, total_categorias);
+
+    for (int i = 0; i < total_categorias; i++) {
+        free(histograma[i]);
+    }
     return 0;
-}
-
-void imprime_histograma(int *vendas[],int num_categorias){
-    int i;
-    for(i = 0;i < num_categorias;i++){
-        imprime_linha(vendas[i]);
-    }
-}
-
-void imprime_linha(int *venda){
-    int i;
-    printf("%d ",*venda);
-    for(i = 0; i < *venda;i++){
-        printf("*");
-    }
-    printf("\n");
 }
