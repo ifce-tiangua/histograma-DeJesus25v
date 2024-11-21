@@ -1,48 +1,52 @@
-#include <stdio.h> 
+#include <stdio.h>
 #include <stdlib.h>
 
-void imprime_histograma(int* vendas[], int num_categorias) {
-    for (int i = 0; i < num_categorias; i++) {
-        printf("%d ", *vendas[i]);
-        for (int j = 0; j < *vendas[i]; j++) {
-            printf("*");
-        }
-        if (i < num_categorias - 1) {
-            printf("\\n"); 
-        }
+void preenche_histrograma(char *h[], int valor, int categoria)
+{
+    for (int i = 0; i < valor; i++)
+    {
+        h[categoria][i] = '*';
     }
 }
 
-int main() {
-    int num_categorias;
-    scanf("%d", &num_categorias);
+void imprimir_histograma(char *h[], int valores[], int categorias)
+{
+    for (int i = 0; i < categorias; i++)
+    {
+        printf("%d ", valores[i]);
 
-    if (num_categorias == 0) {
-        printf("vazio");
-        return 0;
-    }
-
-    int** vendas = (int**)malloc(num_categorias * sizeof(int*));
-    if (vendas == NULL) {
-        printf("Erro ao alocar memória!\n");
-        return 1;
-    }
-
-    for (int i = 0; i < num_categorias; i++) {
-        vendas[i] = (int*)malloc(sizeof(int));
-        if (vendas[i] == NULL) {
-            printf("Erro ao alocar memória!\n");
-            return 1;
+        for (int j = 0; j < valores[i]; j++)
+        {
+            printf("%c", h[i][j]);
         }
-        scanf("%d", vendas[i]);
+
+        printf("\n");
+    }
+}
+
+int main()
+{
+
+    int categorias;
+    scanf("%d", &categorias);
+
+    int valores[categorias];
+    char *histrograma[categorias];
+
+    for (int i = 0; i < categorias; i++)
+    {
+        scanf("%d", &valores[i]);
+        if (valores[i] == 0)
+        {
+            histrograma[i] = NULL;
+        }
+        else
+        {
+            histrograma[i] = (char *)malloc(valores[i] * sizeof(char));
+            preenche_histrograma(histrograma, valores[i], i);
+        }
     }
 
-    imprime_histograma(vendas, num_categorias);
-
-    for (int i = 0; i < num_categorias; i++) {
-        free(vendas[i]);
-    }
-    free(vendas);
-
+    imprimir_histograma(histrograma, valores, categorias);
     return 0;
 }
